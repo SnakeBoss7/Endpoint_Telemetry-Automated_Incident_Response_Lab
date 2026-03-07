@@ -3,13 +3,12 @@
 This guide explains the **logic** and **concepts** behind connecting your Python SOAR script to Jira. This is not a copy-paste script, but a blueprint for how to build it.
 
 ## 1. The Bridge: `jira` Python Library
-f
 To talk to Jira, we use a standard Python library simply called `jira`. It handles all the complex API calls for us.
 
 **Concept**:
 Your script acts as a "User" logging into Jira, clicking "Create Button", filling out the form, and hitting "Submit"—but it happens in milliseconds.
 
-## 2. Authentication (The Keys to the Castle)
+## 2. Authentication 
 
 Since you are using a self-hosted (Docker) version of Jira, you should use a **Personal Access Token (PAT)** for authentication. This is more secure than using your password and easier than OAuth for scripts.
 
@@ -74,9 +73,3 @@ The "Payload" is a dictionary (key-value pairs) that represents the ticket form.
       v
 [Jira Ticket Created: SOC-105]
 ```
-
-## 5. What to Google to Learn More
-To write the actual code, search for these terms:
-*   "python jira library documentation"
-*   "jira api create issue python example"
-*   "jira software server personal access token"
