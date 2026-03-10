@@ -75,10 +75,9 @@ Simulated attacks used to test and validate the detection pipeline.
 - [Jira Setup](Jira/Setup_Guide.md)
 
 ### 5. Known Limitations
-This is a lab/portfolio project. The following gaps are documented to show awareness of production requirements:
+This is a Home lab project. The following gaps are present and are marked for future improvements.
 
 *   **No rate limiting** — VirusTotal free tier is 4 requests/min, AbuseIPDB is 1,000/day. High alert volume would exhaust quotas or get the IP blocked.
 *   **Alert spam / no deduplication** — Same IP firing 50 alerts creates 50 Jira tickets. Production needs a cooldown window or hash-based dedup.
-*   **Silent enrichment failures** — If VT or AbuseIPDB is down, the pipeline continues with incomplete data and the LLM analysis is less reliable.
 *   **No queue/async processing** — Alerts are processed synchronously, so a slow API call blocks the whole pipeline.
 *   **LLM non-determinism** — Same alert can produce slightly different MITRE mappings on repeated runs.
