@@ -122,16 +122,16 @@ These are the **only four hex access values you actually need to remember** when
 
 
 
-## With Defender ENABLED:
+## Windows Defender
+**ENABLED**
+- EventID 1: allow (maybe - depends on if it starts)
+- EventID 10: allow 
+- EventID 11: blocked (blocked before file created)
 
-EventID 1: ✅ (maybe - depends on if it starts)
-EventID 10: ✅ 
-EventID 11: ❌ (blocked before file created)
+**DISABLED**
 
-With Defender DISABLED:
-
-EventID 1: ✅ (should see rundll32.exe)
-EventID 10: ✅ (should see LSASS access)
-EventID 11: ✅ (should see .dmp file)
+- EventID 1: allow (should see rundll32.exe)
+- EventID 10: allow (should see LSASS access)
+- EventID 11: allow (should see .dmp file)
 
 

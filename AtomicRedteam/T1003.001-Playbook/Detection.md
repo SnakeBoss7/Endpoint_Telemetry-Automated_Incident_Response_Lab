@@ -100,13 +100,13 @@ index=sysmon sourcetype=Win10 EventCode=1 Image="*rundll32.exe" CommandLine="*co
 1. **Check Splunk** 
 
 2. **Expected Results:**
-   - ✅ EventCode 10 alert fires (SourceImage = rundll32.exe)
-   - ✅ EventCode 11 alert fires (TargetFilename = lsass.dmp)
-   - ✅ EventCode 1 shows rundll32 execution
+   -  EventCode 10 alert fires [allowed] (SourceImage = rundll32.exe)
+   -  EventCode 11 alert fires [allowed] (TargetFilename = lsass.dmp)
+   -  EventCode 1 shows rundll32 [allowed] execution
 
 3. **If Defender blocks:**
-   - EventCode 10 ✅ (still see access attempt)
-   - EventCode 11 ❌ (file creation blocked)
+   - EventCode 10 allowed (still see access attempt)
+   - EventCode 11 blocked (file creation blocked)
 
 ---
 

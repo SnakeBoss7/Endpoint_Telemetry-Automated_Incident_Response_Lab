@@ -1,0 +1,80 @@
+[2026-03-09 11:55:18.953121] message:jira connection started
+  data/args:nothing
+[2026-03-09 11:55:20.393640] message:AbuseIPDB Enrichment Failed
+  data/args:Expecting value: line 1 column 1 (char 0)
+[2026-03-09 11:57:06.587905] message:jira connection started
+  data/args:nothing
+[2026-03-09 11:57:07.734256] message:AbuseIPDB Enrichment Failed
+  data/args:Expecting value: line 1 column 1 (char 0)
+[2026-03-09 11:58:10.196089] message:jira connection started
+  data/args:nothing
+[2026-03-09 12:06:49.305444] message:jira connection started
+  data/args:nothing
+[2026-03-09 12:06:50.520954] message:Enrichment Failed
+  data/args:'Hashes'
+[2026-03-09 12:10:08.343805] message:jira connection started
+  data/args:nothing
+[2026-03-09 12:10:09.450651] message:Hashes not found
+  data/args:nothing
+[2026-03-10 15:41:42.153671] message:jira connection started
+  data/args:nothing
+[2026-03-10 15:41:43.162852] message:Enrichment Failed
+  data/args:'dict' object has no attribute 'split'
+[2026-03-10 15:57:34.975658] message:jira connection started
+  data/args:nothing
+[2026-03-10 15:57:36.253518] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object is not iterable
+[2026-03-10 15:57:36.254204] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object is not iterable
+[2026-03-10 15:58:23.341088] message:jira connection started
+  data/args:nothing
+[2026-03-10 15:58:24.310007] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object is not iterable
+[2026-03-10 15:59:04.709186] message:jira connection started
+  data/args:nothing
+[2026-03-10 15:59:05.729317] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object is not iterable
+[2026-03-10 15:59:14.218860] message:jira connection started
+  data/args:nothing
+[2026-03-10 15:59:14.894616] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object is not iterable
+[2026-03-10 15:59:43.512993] message:jira connection started
+  data/args:nothing
+[2026-03-10 15:59:44.232612] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object has no attribute 'values'
+[2026-03-10 16:04:04.981094] message:jira connection started
+  data/args:nothing
+[2026-03-10 16:04:06.057970] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object has no attribute 'values'
+[2026-03-10 16:45:26.720821] message:jira connection started
+  data/args:nothing
+[2026-03-10 16:45:29.879511] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object has no attribute 'values'
+[2026-03-10 16:45:45.103872] message:jira connection started
+  data/args:nothing
+[2026-03-10 16:45:48.158371] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object has no attribute 'values'
+[2026-03-10 16:46:21.974820] message:jira connection started
+  data/args:nothing
+[2026-03-10 16:46:25.332365] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object has no attribute 'values'
+[2026-03-10 16:46:41.177428] message:jira connection started
+  data/args:nothing
+[2026-03-10 16:46:45.955036] message:VirusTotal Enrichment Failed
+  data/args:'builtin_function_or_method' object has no attribute 'values'
+[2026-03-10 16:54:15.335038] message:jira connection started
+  data/args:nothing
+[2026-03-10 16:54:16.565810] message:VirusTotal Enrichment Failed
+  data/args:name 'hashes' is not defined
+[2026-03-10 16:54:16.566401] message:VirusTotal Enrichment Failed
+  data/args:name 'hashes' is not defined
+[2026-03-10 16:54:24.867060] message:jira connection started
+  data/args:nothing
+[2026-03-10 16:58:51.757862] message:jira connection started
+  data/args:nothing
+[2026-03-10 17:01:05.413886] message:jira connection started
+  data/args:nothing
+[2026-03-10 17:08:23.986159] message:jira connection started
+  data/args:nothing
+[2026-03-10 17:08:30.518955] message:jira connection started
+  data/args:nothing

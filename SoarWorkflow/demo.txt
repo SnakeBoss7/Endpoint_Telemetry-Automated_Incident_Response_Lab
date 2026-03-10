@@ -1,0 +1,41 @@
+{
+  "result": {
+    "_time": "2025-11-30T10:00:00",
+
+    "alert_name": "Suspicious Authentication and Malware Activity",
+    "rule_name": "multi_indicator_security_alert",
+    "severity": "high",
+
+    "host": "WIN-DC01",
+    "ComputerName": "DC01.corp.local",
+    "dest": "DC01",
+
+    "EventCode": "4625",
+    "EventType": "failed_logon",
+    "LogonType": "3",
+
+    "TargetUserName": "administrator",
+    "TargetDomainName": "CORP",
+
+    "SourceNetworkAddress": "185.220.101.45",
+    "SourcePort": "49821",
+    "WorkstationName": "ATTACK-HOST",
+
+    "ProcessName": "powershell.exe",
+    "CommandLine": "powershell.exe -nop -w hidden -enc SQBmACgAJABQAFMAVgBlAHIAcwBpAG8AbgBUAGEAYgBsAGUALgBQAFMAVgBlAHIAcwBpAG8AbgApAA==",
+
+    "Hashes": {
+      "MD5": "44d88612fea8a8f36de82e1278abb02f"
+    },
+
+    "domain": "malicious-login-check[.]com",
+    "url": "http://malicious-login-check.com/update/login.php",
+
+    "parent_process": "winword.exe",
+
+    "attempt_count": "27",
+    "time_window_seconds": "120",
+
+    "raw_event": "Multiple failed logon attempts detected from 185.220.101.45 against administrator on DC01. Suspicious PowerShell execution observed."
+  }
+}

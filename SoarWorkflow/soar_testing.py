@@ -11,19 +11,24 @@ load_dotenv()
 # echo '{"result": {"host": "TEST-HOST", "message": "Test Message", "EventCode": "4624", "EventType": "0", "RuleName": "Test Rule", "GrantedAccess": "0x1F3FFF", "_time": "2025-11-30T10:00:00"}}' | python3 MINI-SOAR-PY/alert_script.py
 
 # jira Configuration 
-JIRA_SERVER = os.getenv("JIRA_SERVER")
-JIRA_USER = os.getenv("JIRA_USER")
-JIRA_PASS = os.getenv("JIRA_PASS")
-PROJECT_KEY = os.getenv("PROJECT_KEY")
+# JIRA_SERVER = os.getenv("JIRA_SERVER")
+# JIRA_USER = os.getenv("JIRA_USER")
+# JIRA_PASS = os.getenv("JIRA_PASS")
+# PROJECT_KEY = os.getenv("PROJECT_KEY")
 
+# Enrichment Configuration
+ABUSEIPDB_API_KEY= os.getenv("ABUSEIPDB_API_KEY")
+ABUSEIPDB_API='https://www.abuseipdb.com/api/v2/check'
 
+VIRUS_TOTAL_API_KEY= os.getenv("VIRUS_TOTAL_API_KEY")
+VIRUS_TOTAL_API= 'https://www.virustotal.com/api/v3/files'
 # Ai configuration
 invoke_url = "https://integrate.api.nvidia.com/v1/chat/completions"
 nv_api=os.getenv('NV_API');
 stream = False
 headers = {
-  "Authorization": "Bearer "+nv_api,
-  "Accept": "text/event-stream" if stream else "application/json"
+  "Authorization": "Bearer "+ nv_api,
+  "Accept":  "application/json"
 }
 
 user_boilerplate_prompt = r"""
@@ -32,8 +37,7 @@ user_boilerplate_prompt = r"""
     ### RAW SPLUNK TELEMETRY ###
     {payload}
     ### ENRICHMENT DATA ###
-    - VirusTotal: not available
-    - Shodan/AbuseIPDB: not available
+    {enrichment_data}
     """
 
 system_prompt = """
@@ -92,7 +96,7 @@ def debug_log(msg, data):
     try:
         # Using /tmp  for debug logging
         print("Debug Log:", log_entry)
-        with open("/tmp/soar_debug.log", "a") as f:
+        with open("soar_debug.log", "a") as f:
             f.write(log_entry)
     except Exception as e:
         print(f"Failed to write to log: {e}")
@@ -138,20 +142,32 @@ def ticket_creation(jira, issue_type,ticket_payload):
         return None
 
 def virus_total_enrichment(hash):
-    print(hash)
-    sha256 = hash.split(",")[0].split("=")[1]
-    print(sha256)
+    headers={
+        "accept": "application/json",
+        "x-apikey": VIRUS_TOTAL_API_KEY
+    }
+    print("-------- VIRUST TOTAL ---------")
     try:
-        url = f"{VT_URL}/{sha256}"
-        headers = {
-            "x-apikey": VT_API
-        }
-        response = requests.get(url,headers=headers)
-        print("response of virsusT \n")
-        data = response.json()
-        # print(data["data"])
-        print(json.dumps(data, indent=4))
+        for value in hash.values():
+            url = VIRUS_TOTAL_API + "/"+ value
+            response = requests.get(url, headers=headers)
+            data = response.json()
+            attr = data["data"]["attributes"]
 
+            vt_summary = {
+                "hash": attr.get("sha256"),
+                "md5": attr.get("md5"),
+                "file_type": attr.get("type_description"),
+                "file_size": attr.get("size"),
+                "malicious_engines": attr["last_analysis_stats"]["malicious"],
+                "suspicious_engines": attr["last_analysis_stats"]["suspicious"],
+                "undetected_engines": attr["last_analysis_stats"]["undetected"],
+                "threat_label": attr.get("popular_threat_classification", {}).get("suggested_threat_label"),
+                "tags": attr.get("tags", [])[:5],
+                "file_name": attr.get("meaningful_name")
+            }
+            print(json.dumps(vt_summary,indent=4))
+            return vt_summary
 
     except Exception as e:
         debug_log("VirusTotal Enrichment Failed", str(e))
@@ -159,8 +175,10 @@ def virus_total_enrichment(hash):
         return None
 # AI encrichment
 
-def ai_res(tel_payload):
+
+def ai_res(tel_payload,enrichment_data):
     user_prompt =  user_boilerplate_prompt.replace("{payload}", json.dumps(tel_payload['result']))
+    user_prompt =  user_prompt.replace("{enrichment_data}", json.dumps(enrichment_data))
     payload = {
         "model": "meta/llama-4-maverick-17b-128e-instruct",
         "messages": [{"role":"system","content":system_prompt+"\n\nDetailed thinking on."},{"role":"user","content":user_prompt}],
@@ -173,35 +191,84 @@ def ai_res(tel_payload):
     }
     response = requests.post(invoke_url, headers=headers, json=payload)
     res = parse_llm_response(response.json())
-    print(res)
+    print("-------- AI RESPONSE---------")
+    print(json.dumps(res, indent=4))
     return res
 
     
 # Get payload from stdin Splunk
 def get_payload():
     try:
-        payload = sys.stdin.read()
-        debug_log("splunk payload", payload)
-        return json.loads(payload)
+        payload = json.loads(sys.stdin.read())
+        print("------------ payload of splunk ------------\n")
+        print(json.dumps(payload, indent=4))
+        # debug_log("splunk payload", payload)
+        return payload
     except Exception as e:
         debug_log("Failed to read payload", str(e))
         return None
 
 
+def check_IpReputaton(ip):
+    try:
+        url = 'https://api.abuseipdb.com/api/v2/check'
+
+        querystring = {
+            'ipAddress': ip,
+            'maxAgeInDays': '90'
+        }
+
+        headers = {
+            'Accept': 'application/json',
+            'Key': ABUSEIPDB_API_KEY
+        }
+
+        response = requests.get(url,headers=headers, params=querystring)
+        print("-------- ABUSE IPDB RESPONSE  ---------")
+        data = response.json()
+        # print(data["data"])
+        print(json.dumps(data, indent=4))
+        return data
+    except Exception as e:
+        debug_log("AbuseIPDB Enrichment Failed", str(e))
+        print(f"Error enriching with AbuseIPDB: {e}")
+        return None
+    
 def main():
     # jira connection
     debug_log("jira connection started", "nothing")
-    jira = jira_conn()
-    debug_log("jira connection success", jira)
-    for field in jira.issue_types():
-        print(field)
+    # jira = jira_conn()
+    # debug_log("jira connection success", jira)
+    # for field in jira.issue_types():
+    #     print(field)
     # get payload from stdin
-    debug_log("get payload started", "nothing")
+    # debug_log("get payload started", "nothing")
     payload = get_payload()
+    enrichment_data = {}
+    payload.update(enrichment_data)
+    try:
+        ip_address = payload.get('result',{}).get('SourceNetworkAddress')
+        if ip_address:
+            ip_reputation_abuseipdb = check_IpReputaton(ip_address)
+            enrichment_data['ip_reputation_abuseipdb'] = ip_reputation_abuseipdb
+        else:
+            debug_log("SourceNetworkAddress not found", "nothing")  
+        hash = payload.get('result',{}).get('Hashes')
+        if hash:
+            vt_response = virus_total_enrichment(hash)
+            enrichment_data['virus_total_enrichment'] = vt_response
+        else:
+            debug_log("Hashes not found", "nothing")
+
+
+    except Exception as e:
+        debug_log("Enrichment Failed", str(e))
+        print(f"Error enriching with AbuseIPDB: {e}")
+        return None
 
     # ai summary
-    final_res = ai_res(tel_payload=payload)
-    debug_log("Final response ",final_res)
+    final_res = ai_res(tel_payload=payload,enrichment_data=enrichment_data)
+    # debug_log("Final response ",final_res)
     
     # enrichment
     # hash = payload['result']['Hashes']
